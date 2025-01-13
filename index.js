@@ -17,3 +17,7 @@ app.get("/", (req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
 });
+
+
+
+// go and study about how to make api without any package, using nodejs only -> xhr
