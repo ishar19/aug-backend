@@ -10,6 +10,23 @@ const jobSchema = new Schema({
         type: String,
         required: true,
     },
+    salary: {
+        type: Number,
+        required: true,
+    },
+    skills: {
+        type: [String],
+        required: true,
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+    remote: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     createdBy: {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -27,6 +44,10 @@ const jobSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: "Application",
         required: true,
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false,
     },
 });
 module.exports = mongoose.model("Job", jobSchema);

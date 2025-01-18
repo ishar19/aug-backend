@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userModel = require("../models/user.model");
 const applicationModel = require("../models/application.model");
-
+const authMiddleware = require("../middleware/auth");
 // get id from token
 // get user from that id 
 
@@ -20,7 +20,7 @@ router.get("/", async (req, res, next) => {
     }
 });
 
-router.delete("/", async (req, res, next) => {
+router.delete("/", authMiddleware, async (req, res, next) => {
     try {
         const { id } = req.user;
         const user = await userModel.findByIdAndDelete(id);
@@ -34,7 +34,7 @@ router.delete("/", async (req, res, next) => {
     }
 });
 
-router.put("/", async (req, res, next) => {
+router.put("/", authMiddleware, async (req, res, next) => {
     try {
         const { id } = req.user;
         const user = await userModel.findByIdAndUpdate(id, req.body);
@@ -48,7 +48,7 @@ router.put("/", async (req, res, next) => {
     }
 });
 // /api/user/jobs?createdJobs=true&savedJobs=false&appliedJobs=true
-router.get("/jobs", async (req, res, next) => {
+router.get("/jobs", authMiddleware, async (req, res, next) => {
     try {
         const { createdJobs, savedJobs, appliedJobs } = req.query;
         const jobs = await userModel.findById(req.user.id);
@@ -75,7 +75,7 @@ router.get("/jobs", async (req, res, next) => {
     }
 })
 
-router.get("/status", async (req, res, next) => {
+router.get("/status", authMiddleware, async (req, res, next) => {
     try {
         const { id } = req.user;
         const user = await userModel.findById(id);
@@ -92,7 +92,6 @@ router.get("/status", async (req, res, next) => {
     }
 })
 
-// create filters for pending and rejected
-// create apis for counting applications (individually) and (cumulatively)
+
 
 module.exports = router;
