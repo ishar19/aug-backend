@@ -76,22 +76,65 @@ router.get("/jobs", async (req, res, next) => {
 })
 
 router.get("/status", async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const applications = await applicationModel.find({ user: id });
+
+    const acceptedApplications = applications.filter(
+      (app) => app.status === "accepted"
+    );
+    const pendingApplications = applications.filter(
+      (app) => app.status === "pending  "
+    );
+    const rejectedApplications = applications.filter(
+      (app) => app.status === "rejected"
+    );
+
+    return res
+      .json({ acceptedApplications, pendingApplications, rejectedApplications })
+      .status(200);
+  } catch (err) {
+    next(err);
+  }
+});
+router.get("/count", async (req, res, next) => {
+  try {
+    const { id } = req.user;
+
+    const applications = await applicationModel.find({ user: id });
+
+    const count = {
+      accepted: applications.filter((app) => app.status === "accepted").length,
+      pending: applications.filter((app) => app.status === "pending").length,
+      rejected: applications.filter((app) => app.status === "rejected").length,
+    };
+
+    return res.status(200).json(count);
+  } catch (err) {
+    next(err);
+  }
+
+  //total applications
+
+  router.get("/total", async (req, res, next) => {
     try {
-        const { id } = req.user;
-        const user = await userModel.findById(id);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+      const { id } = req.user;
 
-        const applications = await applicationModel.find({ user: id });
-        const acceptedApplications = applications.filter(app => app.status === "accepted");
-        return res.json({ acceptedApplications }).status(200);
-    }
-    catch (err) {
-        next(err);
-    }
-})
+      const totalApplications = await applicationModel.countDocuments({
+        user: id,
+      }); //method tto count the number of documents
 
+      return res.status(200).json({ totalApplications });
+    } catch (err) {
+      next(err);
+    }
+  });
+});
 // create filters for pending and rejected
 // create apis for counting applications (individually) and (cumulatively)
 
