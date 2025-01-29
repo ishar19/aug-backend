@@ -6,11 +6,14 @@ const jwt = require("jsonwebtoken");
 
 router.post("/register", async (req, res, next) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, mobile } = req.body;
+        console.log(req.body);
+        console.log(name, email, password, mobile);
         const hashedPassword = bcrypt.hashSync(password, 10);
         const user = new userModel({
             name,
             email,
+            mobile,
             password: hashedPassword,
         });
         await user.save();
@@ -43,3 +46,5 @@ router.post("/login", async (req, res, next) => {
         next(err);
     }
 });
+
+module.exports = { authRoutes: router };

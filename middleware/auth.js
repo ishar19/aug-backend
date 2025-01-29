@@ -1,4 +1,6 @@
-const authMiddleware = (req, res, next) => {
+
+
+function authMiddleware(req, res, next) {
     try {
         const token = req.headers.authorization;
         if (!token) {
@@ -11,3 +13,5 @@ const authMiddleware = (req, res, next) => {
         next(err);
     }
 };
+
+exports.authMiddleware = authMiddleware;

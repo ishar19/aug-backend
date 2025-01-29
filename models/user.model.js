@@ -14,6 +14,12 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    mobile: {
+        type: String,
+        unique: true,
+        default: null,
+        required: true,
+    },
     createdJobs: {
         type: [Schema.Types.ObjectId],
         ref: "Job",
