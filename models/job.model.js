@@ -43,6 +43,7 @@ const jobSchema = new Schema({
     application: {
         type: [Schema.Types.ObjectId],
         ref: "Application",
+        default: [],
         required: true,
     },
     isDeleted: {

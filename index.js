@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const errorHandler = require("./middleware/errorHandler");
 const userRoutes = require("./routes/user");
 const { authRoutes } = require("./routes/auth");
+const jobRoutes = require("./routes/job");
 dotenv.config();
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(errorHandler)
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/job', jobRoutes);
 app.get("/", (req, res, next) => {
     try {
         res.send("Hello World!");

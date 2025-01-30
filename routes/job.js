@@ -3,7 +3,7 @@ const router = express.Router();
 const jobModel = require("../models/job.model");
 const applicationModel = require("../models/application.model");
 const userModel = require("../models/user.model");
-const authMiddleware = require("../middleware/auth");
+const { authMiddleware } = require("../middleware/auth");
 // creating a job
 
 // css,nodejs, javascript
@@ -12,6 +12,7 @@ router.post("/", authMiddleware, async (req, res, next) => {
     try {
 
         const { title, description, salary, skills, location, remote } = req.body;
+        console.log(title, description, salary, skills, location, remote);
         const serialsiedSkills = skills.split(",").map(skill => skill.trim());
         const job = new jobModel({
             title,
@@ -28,7 +29,7 @@ router.post("/", authMiddleware, async (req, res, next) => {
         }
         job.createdBy = req.user.id;
         await job.save();
-        // res.json({ message: "Job created successfully" }).status(200);
+        res.json({ message: "Job created successfully" }).status(200);
     }
     catch (err) {
         next(err);
@@ -151,3 +152,5 @@ router.get("/:id/application", authMiddleware, async (req, res, next) => {
         next(err);
     }
 });
+
+module.exports = router;
