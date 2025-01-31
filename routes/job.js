@@ -35,7 +35,32 @@ router.post("/", authMiddleware, async (req, res, next) => {
         next(err);
     }
 })
-
+router.put("/:id", authMiddleware, async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const jobId = req.params.id;
+        const { title, description, salary, skills, location, remote } = req.body;
+        const job = await jobModel.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+        if (job.createdBy.toString() !== userId.toString()) {
+            return res.status(401).json({ message: "You are not authorized to update this job" });
+        }
+        const updatedJob = await jobModel.findByIdAndUpdate(jobId, {
+            title,
+            description,
+            salary,
+            skills: skills.split(",").map(skill => skill.trim()),
+            location,
+            remote,
+        });
+        res.json(updatedJob).status(200);
+    }
+    catch (err) {
+        next(err);
+    }
+})
 
 // add filters for pending and rejected
 router.get("/", async (req, res, next) => {
